@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials & Reviews | VRSTY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<style id="vrsty-nav-styles">
+/* ── VRSTY SHARED NAV ── */
+#vrsty-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* LIGHT (homeowner) theme */
+#vrsty-nav.theme-light {
+  background: rgba(255,252,245,0.96);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-light .nav-logo { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-logo span { color: #C9A84C; }
+#vrsty-nav.theme-light .nav-link { color: #555; }
+#vrsty-nav.theme-light .nav-link:hover { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-dropdown-menu {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#vrsty-nav.theme-light .nav-dropdown-item { color: #444; }
+#vrsty-nav.theme-light .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-pay { color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); }
+#vrsty-nav.theme-light .nav-pay:hover { background: rgba(201,168,76,0.08); }
+#vrsty-nav.theme-light .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-light .nav-switch { color: #aaa; }
+#vrsty-nav.theme-light .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-light .mobile-menu { background: #fffcf5; border-top: 1px solid rgba(201,168,76,0.15); }
+#vrsty-nav.theme-light .mobile-link { color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+/* DARK (student) theme */
+#vrsty-nav.theme-dark {
+  background: rgba(13,13,13,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-dark .nav-logo { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-logo span { color: #f0ece3; }
+#vrsty-nav.theme-dark .nav-link { color: #888; }
+#vrsty-nav.theme-dark .nav-link:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-dropdown-menu {
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#vrsty-nav.theme-dark .nav-dropdown-item { color: #bbb; }
+#vrsty-nav.theme-dark .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-pay { display: none; }
+#vrsty-nav.theme-dark .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-dark .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-dark .nav-switch { color: #555; }
+#vrsty-nav.theme-dark .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .mobile-menu { background: #111; border-top: 1px solid rgba(201,168,76,0.1); }
+#vrsty-nav.theme-dark .mobile-link { color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+/* Structure */
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown-trigger::after {
+  content: '▾';
+  font-size: 0.6rem;
+  margin-top: 1px;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: all 0.18s;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 11px 16px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+/* Right actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-switch {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+.nav-pay {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 2px;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 9px 22px;
+  border-radius: 2px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+#vrsty-nav.theme-light .nav-hamburger span { background: #333; }
+#vrsty-nav.theme-dark .nav-hamburger span { background: #C9A84C; }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 32px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+.mobile-cta {
+  margin: 12px 32px 0;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #C9A84C;
+  color: #0D0D0D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nav-links-row, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script id="vrsty-nav-script">
+(function() {
+  const NAV_CONFIG = {
+    homeowner: {
+      theme: 'light',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'homeowners-how-it-works.html' },
+        { label: 'Our Process', href: 'homeowners-process.html' },
+        { label: 'Gallery', href: 'homeowners-gallery.html' },
+        { label: 'Testimonials', href: 'homeowners-testimonials.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'More ▾', dropdown: [
+          { label: 'FAQs', href: 'homeowners-faqs.html' },
+          { label: 'Financing', href: 'homeowners-financing.html' },
+          { label: 'Register a Warranty', href: 'homeowners-warranty.html' },
+        ]},
+      ],
+      pay: { label: 'Make a Payment', href: 'homeowners-payment.html' },
+      cta: { label: 'Free Estimate', href: '#estimate' },
+      switchLabel: '🎓 For Students →',
+      switchHref: 'students-how-it-works.html',
+    },
+    student: {
+      theme: 'dark',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'students-how-it-works.html' },
+        { label: 'History', href: 'students-history.html' },
+        { label: 'Alumni', href: 'students-alumni.html' },
+        { label: 'Resources', href: 'students-resources.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'Painters ▾', dropdown: [
+          { label: 'How It Works', href: 'painters-how-it-works.html' },
+          { label: 'Apply as a Painter', href: 'painters-apply.html' },
+        ]},
+      ],
+      pay: null,
+      cta: { label: 'Apply Now', href: 'students-apply.html' },
+      switchLabel: '🏠 For Homeowners →',
+      switchHref: 'homeowners-how-it-works.html',
+    }
+  };
+
+  window.initNav = function(audience) {
+    const cfg = NAV_CONFIG[audience];
+    if (!cfg) return;
+
+    // Build link HTML
+    let linksHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        linksHTML += `<div class="nav-dropdown">
+          <span class="nav-link nav-dropdown-trigger">${link.label}</span>
+          <div class="nav-dropdown-menu">
+            ${link.dropdown.map(d => `<a class="nav-dropdown-item" href="${d.href}">${d.label}</a>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        linksHTML += `<a class="nav-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    // Mobile links
+    let mobileHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        link.dropdown.forEach(d => {
+          mobileHTML += `<a class="mobile-link" href="${d.href}">${d.label}</a>`;
+        });
+      } else {
+        mobileHTML += `<a class="mobile-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    const payHTML = cfg.pay
+      ? `<a class="nav-pay" href="${cfg.pay.href}">${cfg.pay.label}</a>`
+      : '';
+
+    const html = `
+      <div class="nav-inner">
+        ${cfg.logo}
+        <div class="nav-links-row">${linksHTML}</div>
+        <div class="nav-actions">
+          <a class="nav-switch" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+          ${payHTML}
+          <a class="nav-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+        </div>
+        <div class="nav-hamburger" id="nav-ham">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        ${mobileHTML}
+        <a class="mobile-link" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+        <a class="mobile-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+      </div>`;
+
+    const nav = document.getElementById('vrsty-nav');
+    nav.className = `theme-${cfg.theme}`;
+    nav.innerHTML = html;
+
+    // Dropdown toggles
+    nav.querySelectorAll('.nav-dropdown').forEach(dd => {
+      dd.querySelector('.nav-dropdown-trigger').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      nav.querySelectorAll('.nav-dropdown').forEach(dd => dd.classList.remove('open'));
+    });
+
+    // Mobile toggle
+    document.getElementById('nav-ham').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  };
+})();
+</script>
+
+<style>
+:root{--gold:#C9A84C;--gold-dim:rgba(201,168,76,0.1);--border:rgba(201,168,76,0.18);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#fffcf5;color:#1a1612;font-family:'Barlow',sans-serif;overflow-x:hidden;}
+.page-hero{background:#1a1612;padding:140px 24px 72px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--border);}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(201,168,76,0.1) 0%,transparent 65%);}
+.hero-eyebrow{font-size:0.65rem;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;position:relative;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,6rem);letter-spacing:0.04em;line-height:0.93;color:#f5f0e8;position:relative;}
+.hero-title em{color:var(--gold);font-style:normal;}
+.hero-sub{max-width:480px;margin:18px auto 0;font-size:0.95rem;font-weight:300;line-height:1.68;color:rgba(245,240,232,0.55);position:relative;}
+.breadcrumb{background:#fff;border-bottom:1px solid var(--border);padding:14px 48px;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;color:#7a6f60;}
+.breadcrumb a{color:var(--gold);text-decoration:none;}
+.content{max-width:900px;margin:0 auto;padding:80px 32px 120px;text-align:center;}
+.coming-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:0.68rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;padding:8px 20px;border-radius:20px;margin-bottom:36px;}
+.coming-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.06em;line-height:1;margin-bottom:16px;color:#1a1612;}
+.coming-body{font-size:1rem;font-weight:300;line-height:1.7;color:#7a6f60;max-width:520px;margin:0 auto 48px;}
+.placeholder-box{background:#fff;border:1px dashed rgba(201,168,76,0.25);padding:56px 40px;border-radius:3px;margin-bottom:48px;}
+.placeholder-icon{font-size:3rem;margin-bottom:16px;opacity:0.5;}
+.placeholder-label{font-size:0.72rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:#7a6f60;margin-bottom:8px;}
+.placeholder-note{font-size:0.86rem;font-weight:300;line-height:1.65;color:#7a6f60;}
+.back-link{display:inline-block;padding:12px 28px;border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.1em;text-decoration:none;border-radius:2px;transition:all 0.18s;}
+.back-link:hover{background:var(--gold);color:#0D0D0D;}
+footer{background:#111;border-top:1px solid var(--border);padding:32px 48px 24px;text-align:center;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.18em;color:var(--gold);margin-bottom:6px;}
+.footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:16px;}
+.footer-links a{font-size:0.73rem;color:#555;text-decoration:none;transition:color 0.18s;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-size:0.67rem;color:#333;}
+@media(max-width:600px){.breadcrumb,footer{padding-left:20px;padding-right:20px;}.content{padding:56px 20px 80px;}}
+</style>
+</head>
+<body>
+<nav id="vrsty-nav"></nav>
+<div class="page-hero">
+  <div class="hero-eyebrow">For Homeowners</div>
+  <h1 class="hero-title">What Homeowners <em>Say</em></h1>
+  <p class="hero-sub">Real reviews from real customers who hired VRSTY.</p>
+</div>
+<div class="breadcrumb">
+  <a href="index.html">Home</a> &nbsp;/&nbsp;
+  <a href="homeowners-how-it-works.html">Homeowners</a> &nbsp;/&nbsp;
+  Testimonials
+</div>
+<div class="content">
+  <div class="coming-badge">🏗️ &nbsp; Coming Soon</div>
+  <h2 class="coming-title">This Page is Being Built</h2>
+  <p class="coming-body">We're putting this section together now. Check back soon — or use the links below to explore the rest of the site.</p>
+  <div class="placeholder-box">
+    <div class="placeholder-icon">📋</div>
+    <div class="placeholder-label">Content Coming Soon</div>
+    <p class="placeholder-note">This section will include Testimonials & Reviews. Full content is in development.</p>
+  </div>
+  <a href="homeowners-how-it-works.html">How It Works</a><a href="homeowners-gallery.html">Gallery</a><a href="homeowners-faqs.html">FAQs</a>
+</div>
+<footer>
+  <div class="footer-logo">VRSTY</div>
+  <div class="footer-links"><a href="homeowners-how-it-works.html">How It Works</a><a href="homeowners-gallery.html">Gallery</a><a href="homeowners-faqs.html">FAQs</a></div>
+  <div class="footer-copy">© 2025 Vrsty, Inc. All rights reserved.</div>
+</footer>
+<script>initNav('homeowner');</script>
+</body>
+</html>

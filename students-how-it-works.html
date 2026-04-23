@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — VRSTY Students</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<style id="vrsty-nav-styles">
+/* ── VRSTY SHARED NAV ── */
+#vrsty-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* LIGHT (homeowner) theme */
+#vrsty-nav.theme-light {
+  background: rgba(255,252,245,0.96);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-light .nav-logo { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-logo span { color: #C9A84C; }
+#vrsty-nav.theme-light .nav-link { color: #555; }
+#vrsty-nav.theme-light .nav-link:hover { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-dropdown-menu {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#vrsty-nav.theme-light .nav-dropdown-item { color: #444; }
+#vrsty-nav.theme-light .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-pay { color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); }
+#vrsty-nav.theme-light .nav-pay:hover { background: rgba(201,168,76,0.08); }
+#vrsty-nav.theme-light .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-light .nav-switch { color: #aaa; }
+#vrsty-nav.theme-light .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-light .mobile-menu { background: #fffcf5; border-top: 1px solid rgba(201,168,76,0.15); }
+#vrsty-nav.theme-light .mobile-link { color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+/* DARK (student) theme */
+#vrsty-nav.theme-dark {
+  background: rgba(13,13,13,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-dark .nav-logo { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-logo span { color: #f0ece3; }
+#vrsty-nav.theme-dark .nav-link { color: #888; }
+#vrsty-nav.theme-dark .nav-link:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-dropdown-menu {
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#vrsty-nav.theme-dark .nav-dropdown-item { color: #bbb; }
+#vrsty-nav.theme-dark .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-pay { display: none; }
+#vrsty-nav.theme-dark .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-dark .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-dark .nav-switch { color: #555; }
+#vrsty-nav.theme-dark .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .mobile-menu { background: #111; border-top: 1px solid rgba(201,168,76,0.1); }
+#vrsty-nav.theme-dark .mobile-link { color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+/* Structure */
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown-trigger::after {
+  content: '▾';
+  font-size: 0.6rem;
+  margin-top: 1px;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: all 0.18s;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 11px 16px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+/* Right actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-switch {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+.nav-pay {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 2px;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 9px 22px;
+  border-radius: 2px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+#vrsty-nav.theme-light .nav-hamburger span { background: #333; }
+#vrsty-nav.theme-dark .nav-hamburger span { background: #C9A84C; }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 32px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+.mobile-cta {
+  margin: 12px 32px 0;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #C9A84C;
+  color: #0D0D0D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nav-links-row, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script id="vrsty-nav-script">
+(function() {
+  const NAV_CONFIG = {
+    homeowner: {
+      theme: 'light',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'homeowners-how-it-works.html' },
+        { label: 'Our Process', href: 'homeowners-process.html' },
+        { label: 'Gallery', href: 'homeowners-gallery.html' },
+        { label: 'Testimonials', href: 'homeowners-testimonials.html' },
+        { label: 'More ▾', dropdown: [
+          { label: 'FAQs', href: 'homeowners-faqs.html' },
+          { label: 'Financing', href: 'homeowners-financing.html' },
+          { label: 'Register a Warranty', href: 'homeowners-warranty.html' },
+        ]},
+      ],
+      pay: { label: 'Make a Payment', href: 'homeowners-payment.html' },
+      cta: { label: 'Free Estimate', href: '#estimate' },
+      switchLabel: '🎓 For Students →',
+      switchHref: 'students-how-it-works.html',
+    },
+    student: {
+      theme: 'dark',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'students-how-it-works.html' },
+        { label: 'History', href: 'students-history.html' },
+        { label: 'Alumni', href: 'students-alumni.html' },
+        { label: 'Resources', href: 'students-resources.html' },
+        { label: 'Painters ▾', dropdown: [
+          { label: 'How It Works', href: 'painters-how-it-works.html' },
+          { label: 'Apply as a Painter', href: 'painters-apply.html' },
+        ]},
+      ],
+      pay: null,
+      cta: { label: 'Apply Now', href: 'students-apply.html' },
+      switchLabel: '🏠 For Homeowners →',
+      switchHref: 'homeowners-how-it-works.html',
+    }
+  };
+
+  window.initNav = function(audience) {
+    const cfg = NAV_CONFIG[audience];
+    if (!cfg) return;
+
+    // Build link HTML
+    let linksHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        linksHTML += `<div class="nav-dropdown">
+          <span class="nav-link nav-dropdown-trigger">${link.label}</span>
+          <div class="nav-dropdown-menu">
+            ${link.dropdown.map(d => `<a class="nav-dropdown-item" href="${d.href}">${d.label}</a>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        linksHTML += `<a class="nav-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    // Mobile links
+    let mobileHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        link.dropdown.forEach(d => {
+          mobileHTML += `<a class="mobile-link" href="${d.href}">${d.label}</a>`;
+        });
+      } else {
+        mobileHTML += `<a class="mobile-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    const payHTML = cfg.pay
+      ? `<a class="nav-pay" href="${cfg.pay.href}">${cfg.pay.label}</a>`
+      : '';
+
+    const html = `
+      <div class="nav-inner">
+        ${cfg.logo}
+        <div class="nav-links-row">${linksHTML}</div>
+        <div class="nav-actions">
+          <a class="nav-switch" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+          ${payHTML}
+          <a class="nav-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+        </div>
+        <div class="nav-hamburger" id="nav-ham">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        ${mobileHTML}
+        <a class="mobile-link" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+        <a class="mobile-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+      </div>`;
+
+    const nav = document.getElementById('vrsty-nav');
+    nav.className = `theme-${cfg.theme}`;
+    nav.innerHTML = html;
+
+    // Dropdown toggles
+    nav.querySelectorAll('.nav-dropdown').forEach(dd => {
+      dd.querySelector('.nav-dropdown-trigger').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      nav.querySelectorAll('.nav-dropdown').forEach(dd => dd.classList.remove('open'));
+    });
+
+    // Mobile toggle
+    document.getElementById('nav-ham').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  };
+})();
+</script>
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.1);
+  --black: #0D0D0D;
+  --dark: #111;
+  --panel: #181818;
+  --border: rgba(201,168,76,0.14);
+  --text: #f0ece3;
+  --muted: #8a8070;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
+
+.page-hero {
+  background: var(--dark);
+  padding: 140px 24px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.page-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 100%, rgba(201,168,76,0.1) 0%, transparent 65%),
+    repeating-linear-gradient(-45deg, rgba(201,168,76,0.015) 0px, rgba(201,168,76,0.015) 1px, transparent 1px, transparent 32px);
+}
+.hero-eyebrow {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.28em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px; position: relative;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  letter-spacing: 0.04em; line-height: 0.93;
+  color: var(--text); position: relative;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  max-width: 500px; margin: 20px auto 0;
+  font-size: 1rem; font-weight: 300; line-height: 1.68;
+  color: var(--muted); position: relative;
+}
+.hero-tag {
+  margin-top: 20px;
+  display: inline-block;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--gold);
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 7px 18px; border-radius: 20px; position: relative;
+}
+
+.breadcrumb {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 48px;
+  font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.breadcrumb a { color: var(--gold); text-decoration: none; }
+
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 72px 32px 100px;
+}
+
+.section-label {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  letter-spacing: 0.06em; line-height: 1.05; margin-bottom: 14px;
+}
+.section-body {
+  font-size: 1rem; font-weight: 300;
+  line-height: 1.7; color: var(--muted);
+}
+
+/* NARRATIVE BLOCK */
+.narrative {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 48px 52px;
+  margin-bottom: 72px;
+  border-radius: 0 3px 3px 0;
+}
+.narrative-intro {
+  font-size: 1.15rem; font-weight: 300;
+  line-height: 1.75; color: var(--text);
+  margin-bottom: 36px;
+}
+.narrative-intro em {
+  color: var(--gold); font-style: normal; font-weight: 500;
+}
+
+.analogy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 32px;
+}
+.analogy-col {
+  background: rgba(255,255,255,0.03);
+  padding: 28px 28px;
+}
+.analogy-col-label {
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 20px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.analogy-col:first-child .analogy-col-label { color: var(--muted); }
+.analogy-col:last-child .analogy-col-label { color: var(--gold); }
+.analogy-row {
+  display: flex; align-items: flex-start;
+  gap: 14px; margin-bottom: 16px;
+}
+.analogy-arrow {
+  color: var(--gold); font-size: 0.7rem;
+  margin-top: 4px; flex-shrink: 0;
+}
+.analogy-text { font-size: 0.88rem; font-weight: 300; line-height: 1.55; color: var(--muted); }
+.analogy-text strong { color: var(--text); font-weight: 500; }
+
+/* TIMELINE */
+.timeline { position: relative; margin-bottom: 80px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 28px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+.tl-step {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 28px; margin-bottom: 40px; position: relative;
+}
+.tl-dot {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--panel); border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; color: var(--gold);
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+.tl-card {
+  background: var(--panel); border: 1px solid var(--border);
+  padding: 28px 32px; border-radius: 3px;
+  transition: border-color 0.2s;
+}
+.tl-card:hover { border-color: rgba(201,168,76,0.35); }
+.tl-card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 0.08em;
+  color: var(--text); margin-bottom: 8px;
+}
+.tl-card-body {
+  font-size: 0.88rem; font-weight: 300;
+  line-height: 1.65; color: var(--muted);
+}
+.tl-tag {
+  display: inline-block; margin-top: 10px;
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2);
+  color: var(--gold); font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 2px;
+}
+
+/* OPPORTUNITY */
+.opportunity {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; margin-bottom: 80px;
+}
+.pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pillar {
+  background: var(--panel); border: 1px solid var(--border);
+  padding: 22px 20px; border-radius: 3px; transition: border-color 0.2s;
+}
+.pillar:hover { border-color: rgba(201,168,76,0.3); }
+.pillar-icon { font-size: 1.4rem; margin-bottom: 8px; }
+.pillar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; letter-spacing: 0.08em; color: var(--gold); margin-bottom: 6px;
+}
+.pillar-desc { font-size: 0.8rem; font-weight: 300; line-height: 1.55; color: var(--muted); }
+
+.qualifies-box {
+  background: var(--panel); border: 1px solid var(--border);
+  padding: 36px; border-radius: 3px;
+}
+.q-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 22px;
+}
+.q-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+.q-list li {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 0.88rem; font-weight: 400; color: var(--text); line-height: 1.5;
+}
+.q-list li::before { content: '▸'; color: var(--gold); font-size: 0.68rem; margin-top: 3px; flex-shrink: 0; }
+
+/* CTA */
+.cta-band {
+  background: var(--gold); padding: 60px 48px;
+  text-align: center; margin: 0 -32px;
+}
+.cta-band-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  letter-spacing: 0.08em; color: var(--black); margin-bottom: 8px;
+}
+.cta-band-sub {
+  font-size: 0.95rem; font-weight: 300;
+  color: rgba(13,13,13,0.6); margin-bottom: 28px;
+}
+.cta-band-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.btn-black {
+  background: var(--black); color: var(--gold);
+  padding: 13px 36px; border-radius: 2px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem; letter-spacing: 0.12em;
+  text-decoration: none; transition: background 0.18s;
+}
+.btn-black:hover { background: #1a1a1a; }
+.btn-outline-black {
+  border: 2px solid var(--black); color: var(--black);
+  padding: 11px 32px; border-radius: 2px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem; letter-spacing: 0.1em;
+  text-decoration: none; transition: all 0.18s;
+}
+.btn-outline-black:hover { background: var(--black); color: var(--gold); }
+
+footer {
+  background: var(--dark); border-top: 1px solid var(--border);
+  padding: 36px 48px 28px; text-align: center;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem;
+  letter-spacing: 0.18em; color: var(--gold); margin-bottom: 6px;
+}
+.footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-bottom: 20px; }
+.footer-links a { font-size: 0.75rem; color: #555; text-decoration: none; transition: color 0.18s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-copy { font-size: 0.68rem; color: #333; }
+
+@media (max-width: 860px) {
+  .analogy-grid { grid-template-columns: 1fr; }
+  .opportunity { grid-template-columns: 1fr; }
+  .pillar-grid { grid-template-columns: 1fr 1fr; }
+  .narrative { padding: 32px 28px; }
+}
+@media (max-width: 600px) {
+  .timeline::before { display: none; }
+  .tl-step { grid-template-columns: 1fr; gap: 12px; }
+  .pillar-grid { grid-template-columns: 1fr; }
+  .breadcrumb, footer { padding-left: 20px; padding-right: 20px; }
+  .content { padding: 48px 20px 80px; }
+  .cta-band { margin: 0 -20px; padding: 48px 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="vrsty-nav"></nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">Driven People</div>
+  <h1 class="hero-title">Built <em>Different.</em></h1>
+  <p class="hero-sub">VRSTY isn't a summer job. It's your next arena — where the drive you've built finally has somewhere real to go.</p>
+  <span class="hero-tag">Branch Manager Program · Spring &amp; Summer</span>
+</div>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> &nbsp;/&nbsp;
+  <a href="students-how-it-works.html">Students</a> &nbsp;/&nbsp;
+  How It Works
+</div>
+
+<div class="content">
+
+  <!-- THE NARRATIVE -->
+  <div class="narrative">
+    <p class="narrative-intro">
+      In college athletics, the roster is the training ground for the pros. Every rep, every practice, every game builds something bigger than the scoreboard — it builds <em>professionals</em>.<br><br>
+      Most people who competed at a high level — in sports, in student government, in theater, in debate, in any arena where the standard was high and the pressure was real — don't get to keep competing in college. That doesn't mean the drive disappears. It means it has nowhere to go.<br><br>
+      <em>VRSTY is built to change that.</em> It's the training ground for the next generation of entrepreneurs, executives, engineers, and leaders — built on the same structure, discipline, and competitive culture that shaped you, whatever that arena looked like.<br><br>
+      Your spring is pre-season. Your summer is your season. And how you perform is entirely up to you.
+    </p>
+
+    <div class="analogy-grid">
+      <div class="analogy-col">
+        <div class="analogy-col-label">College Athletics</div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Training ground for <strong>the pros</strong></span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">The <strong>roster</strong> earns their spot</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Your <strong>season</strong> is what counts</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text"><strong>Stats</strong> tell the story</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Coaches <strong>develop</strong> you</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Your <strong>team</strong> wins or loses together</span></div>
+      </div>
+      <div class="analogy-col">
+        <div class="analogy-col-label">VRSTY</div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Training ground for <strong>entrepreneurs, CEOs, and professionals</strong></span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text"><strong>Branch Managers</strong> earn their market</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Your <strong>summer</strong> is what counts</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text"><strong>Revenue, jobs closed, crew performance</strong> tell the story</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">VRSTY leadership <strong>develops</strong> you</span></div>
+        <div class="analogy-row"><span class="analogy-arrow">▸</span><span class="analogy-text">Your <strong>crew</strong> wins or loses together</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div style="margin-bottom:48px;">
+    <div class="section-label">Your Journey</div>
+    <h2 class="section-title">From Application to Launch</h2>
+    <p class="section-body" style="max-width:520px;margin-bottom:48px;">Here's the path from the day you apply to the day you're running your first crew.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-step">
+      <div class="tl-dot">01</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Apply Online</div>
+        <p class="tl-card-body">Fill out the Branch Manager application. We're looking for driven people — former athletes, student leaders, anyone wired to outwork the room. 3.0+ GPA and a car on campus required. Takes about 5 minutes.</p>
+        <span class="tl-tag">5 minutes</span>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot">02</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Interview & Selection</div>
+        <p class="tl-card-body">If you qualify, we'll reach out within 48 hours to schedule an interview. This is a selective program. We're not looking for everyone — we're looking for the right people.</p>
+        <span class="tl-tag">Within 48 hours</span>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot">03</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Training Program</div>
+        <p class="tl-card-body">Accepted Branch Managers go through full VRSTY training before launch — sales, operations, crew management, customer service, and financials. You'll know exactly what you're doing before your first job.</p>
+        <span class="tl-tag">Full training included</span>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot">04</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Spring Pre-Season</div>
+        <p class="tl-card-body">Before summer hits, you're already building. Spring is part-time — weekends, free hours — focused on sales, marketing, and territory development. You're lining up customers before your crew ever picks up a brush. Pre-season determines how big your season is.</p>
+        <span class="tl-tag">Part-time · Spring semester</span>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot">05</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Launch Your Market</div>
+        <p class="tl-card-body">Summer is full-time. You've already built the pipeline in the spring — now you execute. Hire your crew, run your jobs, manage quality, and get paid based on what you produce. Your territory, your results.</p>
+        <span class="tl-tag">Full-time · Summer</span>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-dot">05</div>
+      <div class="tl-card">
+        <div class="tl-card-title">Grow & Advance</div>
+        <p class="tl-card-body">Top performing Branch Managers earn paths to Senior BM and District Manager roles — managing multiple markets and developing other students. The ceiling is yours to set.</p>
+        <span class="tl-tag">Unlimited upside</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPPORTUNITY + QUALIFICATIONS -->
+  <div class="opportunity">
+    <div>
+      <div class="section-label">What You Gain</div>
+      <h2 class="section-title">The Full Package</h2>
+      <p class="section-body" style="margin-bottom:28px;">This isn't just income. Every VRSTY season builds your résumé, sharpens your instincts, and puts real experience behind your name before you ever enter a job interview.</p>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-icon">💰</div>
+          <div class="pillar-title">Real Income</div>
+          <p class="pillar-desc">Competitive earnings plus performance bonuses. Real money, not internship rates.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📚</div>
+          <div class="pillar-title">Business Skills</div>
+          <p class="pillar-desc">Sales, operations, finance, leadership — skills that compound for the rest of your career.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🏆</div>
+          <div class="pillar-title">Ownership Mindset</div>
+          <p class="pillar-desc">Your market. Your crew. Your results. Run it like it's yours — because it is.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📈</div>
+          <div class="pillar-title">Career Track</div>
+          <p class="pillar-desc">BM → Sr. BM → District Manager. A real track record employers and grad schools notice.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qualifies-box">
+      <div class="q-title">Who We're Looking For</div>
+      <ul class="q-list">
+        <li>Current college student in good academic standing</li>
+        <li>Strong academic record and disciplined work ethic</li>
+        <li>Former athlete, student leader, or proven self-starter</li>
+        <li>Available for a full summer commitment</li>
+        <li>Reliable transportation on or near campus</li>
+        <li>Willing to do the work it takes to run a real business</li>
+        <li>Looking to build something — not just fill time</li>
+      </ul>
+      <div style="margin-top:28px;display:flex;flex-direction:column;gap:10px;">
+        <a href="students-apply.html" class="btn-black" style="text-align:center;">Apply to Be a Branch Manager</a>
+        <a href="painters-apply.html" style="text-align:center;font-size:0.8rem;color:var(--muted);text-decoration:none;padding:8px;">Not a Branch Manager? Apply as a Painter →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-band">
+    <div class="cta-band-title">Ready to Build Something?</div>
+    <p class="cta-band-sub">Applications are reviewed on a rolling basis. Spots are limited by market.</p>
+    <div class="cta-band-btns">
+      <a href="students-apply.html" class="btn-black">Apply Now</a>
+      <a href="students-resources.html" class="btn-outline-black">Explore Resources</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">VRSTY</div>
+  <div class="footer-links">
+    <a href="students-how-it-works.html">How It Works</a>
+    <a href="students-history.html">History</a>
+    <a href="students-alumni.html">Alumni</a>
+    <a href="students-resources.html">Resources</a>
+    <a href="students-apply.html">Apply</a>
+    <a href="painters-apply.html">Painters</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 Vrsty, Inc. All rights reserved.</div>
+</footer>
+
+<script>initNav('student');</script>
+</body>
+</html>

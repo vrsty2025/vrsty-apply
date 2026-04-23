@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQs — Homeowners | VRSTY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<style id="vrsty-nav-styles">
+/* ── VRSTY SHARED NAV ── */
+#vrsty-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* LIGHT (homeowner) theme */
+#vrsty-nav.theme-light {
+  background: rgba(255,252,245,0.96);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-light .nav-logo { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-logo span { color: #C9A84C; }
+#vrsty-nav.theme-light .nav-link { color: #555; }
+#vrsty-nav.theme-light .nav-link:hover { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-dropdown-menu {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#vrsty-nav.theme-light .nav-dropdown-item { color: #444; }
+#vrsty-nav.theme-light .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-pay { color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); }
+#vrsty-nav.theme-light .nav-pay:hover { background: rgba(201,168,76,0.08); }
+#vrsty-nav.theme-light .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-light .nav-switch { color: #aaa; }
+#vrsty-nav.theme-light .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-light .mobile-menu { background: #fffcf5; border-top: 1px solid rgba(201,168,76,0.15); }
+#vrsty-nav.theme-light .mobile-link { color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+/* DARK (student) theme */
+#vrsty-nav.theme-dark {
+  background: rgba(13,13,13,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-dark .nav-logo { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-logo span { color: #f0ece3; }
+#vrsty-nav.theme-dark .nav-link { color: #888; }
+#vrsty-nav.theme-dark .nav-link:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-dropdown-menu {
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#vrsty-nav.theme-dark .nav-dropdown-item { color: #bbb; }
+#vrsty-nav.theme-dark .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-pay { display: none; }
+#vrsty-nav.theme-dark .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-dark .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-dark .nav-switch { color: #555; }
+#vrsty-nav.theme-dark .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .mobile-menu { background: #111; border-top: 1px solid rgba(201,168,76,0.1); }
+#vrsty-nav.theme-dark .mobile-link { color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+/* Structure */
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown-trigger::after {
+  content: '▾';
+  font-size: 0.6rem;
+  margin-top: 1px;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: all 0.18s;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 11px 16px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+/* Right actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-switch {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+.nav-pay {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 2px;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 9px 22px;
+  border-radius: 2px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+#vrsty-nav.theme-light .nav-hamburger span { background: #333; }
+#vrsty-nav.theme-dark .nav-hamburger span { background: #C9A84C; }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 32px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+.mobile-cta {
+  margin: 12px 32px 0;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #C9A84C;
+  color: #0D0D0D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nav-links-row, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script id="vrsty-nav-script">
+(function() {
+  const NAV_CONFIG = {
+    homeowner: {
+      theme: 'light',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'homeowners-how-it-works.html' },
+        { label: 'Our Process', href: 'homeowners-process.html' },
+        { label: 'Gallery', href: 'homeowners-gallery.html' },
+        { label: 'Testimonials', href: 'homeowners-testimonials.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'More ▾', dropdown: [
+          { label: 'FAQs', href: 'homeowners-faqs.html' },
+          { label: 'Financing', href: 'homeowners-financing.html' },
+          { label: 'Register a Warranty', href: 'homeowners-warranty.html' },
+        ]},
+      ],
+      pay: { label: 'Make a Payment', href: 'homeowners-payment.html' },
+      cta: { label: 'Free Estimate', href: '#estimate' },
+      switchLabel: '🎓 For Students →',
+      switchHref: 'students-how-it-works.html',
+    },
+    student: {
+      theme: 'dark',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'students-how-it-works.html' },
+        { label: 'History', href: 'students-history.html' },
+        { label: 'Alumni', href: 'students-alumni.html' },
+        { label: 'Resources', href: 'students-resources.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'Painters ▾', dropdown: [
+          { label: 'How It Works', href: 'painters-how-it-works.html' },
+          { label: 'Apply as a Painter', href: 'painters-apply.html' },
+        ]},
+      ],
+      pay: null,
+      cta: { label: 'Apply Now', href: 'students-apply.html' },
+      switchLabel: '🏠 For Homeowners →',
+      switchHref: 'homeowners-how-it-works.html',
+    }
+  };
+
+  window.initNav = function(audience) {
+    const cfg = NAV_CONFIG[audience];
+    if (!cfg) return;
+
+    // Build link HTML
+    let linksHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        linksHTML += `<div class="nav-dropdown">
+          <span class="nav-link nav-dropdown-trigger">${link.label}</span>
+          <div class="nav-dropdown-menu">
+            ${link.dropdown.map(d => `<a class="nav-dropdown-item" href="${d.href}">${d.label}</a>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        linksHTML += `<a class="nav-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    // Mobile links
+    let mobileHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        link.dropdown.forEach(d => {
+          mobileHTML += `<a class="mobile-link" href="${d.href}">${d.label}</a>`;
+        });
+      } else {
+        mobileHTML += `<a class="mobile-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    const payHTML = cfg.pay
+      ? `<a class="nav-pay" href="${cfg.pay.href}">${cfg.pay.label}</a>`
+      : '';
+
+    const html = `
+      <div class="nav-inner">
+        ${cfg.logo}
+        <div class="nav-links-row">${linksHTML}</div>
+        <div class="nav-actions">
+          <a class="nav-switch" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+          ${payHTML}
+          <a class="nav-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+        </div>
+        <div class="nav-hamburger" id="nav-ham">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        ${mobileHTML}
+        <a class="mobile-link" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+        <a class="mobile-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+      </div>`;
+
+    const nav = document.getElementById('vrsty-nav');
+    nav.className = `theme-${cfg.theme}`;
+    nav.innerHTML = html;
+
+    // Dropdown toggles
+    nav.querySelectorAll('.nav-dropdown').forEach(dd => {
+      dd.querySelector('.nav-dropdown-trigger').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      nav.querySelectorAll('.nav-dropdown').forEach(dd => dd.classList.remove('open'));
+    });
+
+    // Mobile toggle
+    document.getElementById('nav-ham').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  };
+})();
+</script>
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.1);
+  --cream: #fffcf5;
+  --warm: #f5f0e8;
+  --dark: #1a1612;
+  --text: #1a1612;
+  --muted: #7a6f60;
+  --border: rgba(201,168,76,0.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--text); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
+
+.page-hero {
+  background: var(--dark); padding: 140px 24px 72px;
+  text-align: center; position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 70%);
+}
+.hero-eyebrow {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.26em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px; position: relative;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.05em; line-height: 0.95; color: #f5f0e8; position: relative;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  max-width: 480px; margin: 18px auto 0;
+  font-size: 0.95rem; font-weight: 300; line-height: 1.68;
+  color: rgba(245,240,232,0.55); position: relative;
+}
+
+.breadcrumb {
+  background: var(--warm); border-bottom: 1px solid var(--border);
+  padding: 14px 48px; font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.breadcrumb a { color: var(--gold); text-decoration: none; }
+
+.content {
+  max-width: 800px; margin: 0 auto;
+  padding: 72px 32px 100px;
+}
+
+.section-label {
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: 0.06em; line-height: 1.05; margin-bottom: 12px;
+}
+.section-body {
+  font-size: 1rem; font-weight: 300;
+  line-height: 1.7; color: var(--muted); margin-bottom: 52px;
+}
+
+/* FAQ ACCORDION */
+.faq-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 64px; }
+
+.faq-item {
+  background: #fff; border: 1px solid var(--border);
+  overflow: hidden; transition: border-color 0.2s;
+}
+.faq-item.open { border-color: rgba(201,168,76,0.4); }
+
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding: 22px 28px;
+  cursor: pointer; user-select: none;
+  font-size: 1rem; font-weight: 600; color: var(--text);
+  line-height: 1.45;
+  transition: color 0.18s;
+}
+.faq-q:hover { color: #0D0D0D; }
+.faq-item.open .faq-q { color: #0D0D0D; }
+
+.faq-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 1rem; color: var(--gold);
+  transition: transform 0.25s, background 0.18s;
+}
+.faq-item.open .faq-icon {
+  transform: rotate(45deg);
+  background: var(--gold); color: var(--dark);
+}
+
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.25s ease;
+  padding: 0 28px;
+}
+.faq-item.open .faq-a {
+  max-height: 600px;
+  padding: 0 28px 24px;
+}
+
+.faq-a-inner {
+  font-size: 0.92rem; font-weight: 300;
+  line-height: 1.75; color: var(--muted);
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+}
+.faq-a-inner strong { color: var(--text); font-weight: 600; }
+.faq-a-inner em { color: var(--gold); font-style: normal; font-weight: 500; }
+
+/* CTA BAND */
+.cta-band {
+  background: var(--gold); padding: 52px 40px;
+  text-align: center; border-radius: 3px;
+}
+.cta-band-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: 0.08em; color: var(--dark); margin-bottom: 8px;
+}
+.cta-band-sub {
+  font-size: 0.92rem; font-weight: 300;
+  color: rgba(26,22,18,0.65); margin-bottom: 24px;
+}
+.cta-band-btns { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.btn-dark {
+  background: var(--dark); color: var(--gold);
+  padding: 13px 32px; border-radius: 2px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; letter-spacing: 0.1em;
+  text-decoration: none; transition: background 0.18s;
+}
+.btn-dark:hover { background: #2a2420; }
+.btn-outline-dark {
+  border: 2px solid var(--dark); color: var(--dark);
+  padding: 11px 28px; border-radius: 2px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem; letter-spacing: 0.1em;
+  text-decoration: none; transition: all 0.18s;
+}
+.btn-outline-dark:hover { background: var(--dark); color: var(--gold); }
+
+footer {
+  background: var(--dark); border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 32px 48px 24px; text-align: center;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+  letter-spacing: 0.18em; color: var(--gold); margin-bottom: 6px;
+}
+.footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.footer-links a { font-size: 0.73rem; color: #665e52; text-decoration: none; transition: color 0.18s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-copy { font-size: 0.67rem; color: #3a342e; }
+
+@media (max-width: 600px) {
+  .breadcrumb, footer { padding-left: 20px; padding-right: 20px; }
+  .content { padding: 48px 20px 80px; }
+  .faq-q { padding: 18px 20px; font-size: 0.92rem; }
+  .faq-a { padding: 0 20px; }
+  .faq-item.open .faq-a { padding: 0 20px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="vrsty-nav"></nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">For Homeowners</div>
+  <h1 class="hero-title">Frequently Asked <em>Questions</em></h1>
+  <p class="hero-sub">Everything you want to know before booking a VRSTY crew. If your question isn't here, contact us directly.</p>
+</div>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> &nbsp;/&nbsp;
+  <a href="homeowners-how-it-works.html">Homeowners</a> &nbsp;/&nbsp;
+  FAQs
+</div>
+
+<div class="content">
+
+  <div class="section-label">Your Questions, Answered</div>
+  <h2 class="section-title">We Get These a Lot</h2>
+  <p class="section-body">Honest answers, no fluff. If something's still on your mind, reach out — we respond fast.</p>
+
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <div class="faq-q">
+        Why should I hire students instead of an established painting company?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>Because they can — and because of who they are.</strong><br><br>
+          Painting requires patience, diligence, attention to detail, and hard work. It sits in a sweet spot between skilled labor that requires heavy machinery and desk work that teaches people nothing. It's the perfect craft for someone driven, trainable, and hungry to prove themselves.<br><br>
+          We don't just hire any student. We rigorously select Branch Managers who have the character, the work ethic, and the competitive drive to do this at a high level. Then we train them early, often, and continuously — on both the technical craft and the business side.<br><br>
+          We'll be honest: we think you'll come away with a new appreciation for the next generation when you work with your Branch Manager. They will surprise you.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        Why not just hire a "real" professional painting company?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>We are professionals.</strong><br><br>
+          Collectively, VRSTY's leadership has been responsible for over 100,000 painting projects across 25 states and 2 countries. Our Branch Managers are trained, accountable, and backed by a company that has seen every situation imaginable.<br><br>
+          Think of it like college football. Would you watch a college game? Of course — because those players are talented, coachable, and competitive, even if they haven't gone pro yet. Our Branch Managers are the same: elite-level recruits who are being developed into the professionals of tomorrow.<br><br>
+          And frankly — we'd bet you've hired a "professional" contractor before and been disappointed. We aim to flip that entirely. <em>Built Different.</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        How does your pricing compare to other companies?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          If you got ten quotes from ten different painting companies, VRSTY would land in the middle. We're not the cheapest — because we carry real insurance, full workers' compensation coverage, professional-grade equipment, and the best materials available in the market.<br><br>
+          We're also not the most expensive — because we don't have the overhead of a large corporate operation or the inflated pricing of so-called "exclusive" contractors.<br><br>
+          <strong>The best way to understand our pricing is to get an estimate.</strong> It's free, it's on the spot, and there's no pressure or commitment required. You'll see exactly what you're getting for every dollar.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        Do you guarantee your work?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>Absolutely.</strong><br><br>
+          Here's how we like to frame it: you're hiring a local, student-led branch — but you have the full weight of VRSTY's leadership, systems, and standards behind every job. You're not on your own if something isn't right.<br><br>
+          Every project comes with a VRSTY workmanship warranty. If something doesn't meet our standard after the job is complete, we'll come back and make it right. No runaround, no disappearing act — that's not who we are.<br><br>
+          You can register your warranty online after the job is complete.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        What actually makes VRSTY different from everyone else?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Honestly? <strong>Get an estimate and you'll feel it immediately.</strong><br><br>
+          The communication is real and it actually happens — which, if you've ever hired a contractor before, you know is rarer than it should be. Your Branch Manager will show up on time, walk the property with you, answer every question you have, and hand you a written quote before they leave. No vague follow-ups, no ghosting, no mystery.<br><br>
+          From the very first meeting, VRSTY feels different. That's not an accident — it's what we build for, from how we recruit to how we train to how we show up on the job site.<br><br>
+          <em>VRSTY Work. Real Results.</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        Are your crews insured?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Yes — fully. Every VRSTY job is covered by general liability insurance and workers' compensation. You should never let an uninsured crew work on your home, and we take that seriously.<br><br>
+          We're happy to provide proof of insurance before any work begins. Just ask.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        What areas do you serve?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          VRSTY operates through local Branch Managers who serve their own communities. We're actively expanding our footprint, so the best way to check availability in your area is to request a free estimate. We'll let you know right away if we have a Branch Manager near you — and if not, we'll add you to the waitlist as we grow.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">
+        What types of painting do you do?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          We specialize in residential painting — interior and exterior. This includes walls, ceilings, trim, doors, shutters, decks, fences, and more. Your Branch Manager will walk through the scope with you during the estimate and let you know exactly what's included.<br><br>
+          Have something unusual in mind? Ask us — we'll tell you honestly whether it's something we handle.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-band">
+    <div class="cta-band-title">Still Have Questions?</div>
+    <p class="cta-band-sub">Reach out directly — or just get a free estimate and see for yourself.</p>
+    <div class="cta-band-btns">
+      <a href="#estimate" class="btn-dark">Get a Free Estimate</a>
+      <a href="contact.html" class="btn-outline-dark">Contact Us</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">VRSTY</div>
+  <div class="footer-links">
+    <a href="homeowners-how-it-works.html">How It Works</a>
+    <a href="homeowners-process.html">Our Process</a>
+    <a href="homeowners-gallery.html">Gallery</a>
+    <a href="homeowners-testimonials.html">Testimonials</a>
+    <a href="homeowners-warranty.html">Warranty</a>
+    <a href="homeowners-payment.html">Make a Payment</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 Vrsty, Inc. All rights reserved.</div>
+</footer>
+
+<script>
+initNav('homeowner');
+
+// FAQ accordion
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', function() {
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    // Open this one if it was closed
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>

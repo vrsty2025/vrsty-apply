@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | VRSTY</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<style id="vrsty-nav-styles">
+/* ── VRSTY SHARED NAV ── */
+#vrsty-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* LIGHT (homeowner) theme */
+#vrsty-nav.theme-light {
+  background: rgba(255,252,245,0.96);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-light .nav-logo { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-logo span { color: #C9A84C; }
+#vrsty-nav.theme-light .nav-link { color: #555; }
+#vrsty-nav.theme-light .nav-link:hover { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-dropdown-menu {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#vrsty-nav.theme-light .nav-dropdown-item { color: #444; }
+#vrsty-nav.theme-light .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-pay { color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); }
+#vrsty-nav.theme-light .nav-pay:hover { background: rgba(201,168,76,0.08); }
+#vrsty-nav.theme-light .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-light .nav-switch { color: #aaa; }
+#vrsty-nav.theme-light .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-light .mobile-menu { background: #fffcf5; border-top: 1px solid rgba(201,168,76,0.15); }
+#vrsty-nav.theme-light .mobile-link { color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+/* DARK (student) theme */
+#vrsty-nav.theme-dark {
+  background: rgba(13,13,13,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-dark .nav-logo { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-logo span { color: #f0ece3; }
+#vrsty-nav.theme-dark .nav-link { color: #888; }
+#vrsty-nav.theme-dark .nav-link:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-dropdown-menu {
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#vrsty-nav.theme-dark .nav-dropdown-item { color: #bbb; }
+#vrsty-nav.theme-dark .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-pay { display: none; }
+#vrsty-nav.theme-dark .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-dark .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-dark .nav-switch { color: #555; }
+#vrsty-nav.theme-dark .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .mobile-menu { background: #111; border-top: 1px solid rgba(201,168,76,0.1); }
+#vrsty-nav.theme-dark .mobile-link { color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+/* Structure */
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown-trigger::after {
+  content: '▾';
+  font-size: 0.6rem;
+  margin-top: 1px;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: all 0.18s;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 11px 16px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+/* Right actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-switch {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+.nav-pay {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 2px;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 9px 22px;
+  border-radius: 2px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+#vrsty-nav.theme-light .nav-hamburger span { background: #333; }
+#vrsty-nav.theme-dark .nav-hamburger span { background: #C9A84C; }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 32px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+.mobile-cta {
+  margin: 12px 32px 0;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #C9A84C;
+  color: #0D0D0D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nav-links-row, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script id="vrsty-nav-script">
+(function() {
+  const NAV_CONFIG = {
+    homeowner: {
+      theme: 'light',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'homeowners-how-it-works.html' },
+        { label: 'Our Process', href: 'homeowners-process.html' },
+        { label: 'Gallery', href: 'homeowners-gallery.html' },
+        { label: 'Testimonials', href: 'homeowners-testimonials.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'More ▾', dropdown: [
+          { label: 'FAQs', href: 'homeowners-faqs.html' },
+          { label: 'Financing', href: 'homeowners-financing.html' },
+          { label: 'Register a Warranty', href: 'homeowners-warranty.html' },
+        ]},
+      ],
+      pay: { label: 'Make a Payment', href: 'homeowners-payment.html' },
+      cta: { label: 'Free Estimate', href: '#estimate' },
+      switchLabel: '🎓 For Students →',
+      switchHref: 'students-how-it-works.html',
+    },
+    student: {
+      theme: 'dark',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'students-how-it-works.html' },
+        { label: 'History', href: 'students-history.html' },
+        { label: 'Alumni', href: 'students-alumni.html' },
+        { label: 'Resources', href: 'students-resources.html' },
+        { label: 'Contact', href: 'contact.html' },
+        { label: 'Painters ▾', dropdown: [
+          { label: 'How It Works', href: 'painters-how-it-works.html' },
+          { label: 'Apply as a Painter', href: 'painters-apply.html' },
+        ]},
+      ],
+      pay: null,
+      cta: { label: 'Apply Now', href: 'students-apply.html' },
+      switchLabel: '🏠 For Homeowners →',
+      switchHref: 'homeowners-how-it-works.html',
+    }
+  };
+
+  window.initNav = function(audience) {
+    const cfg = NAV_CONFIG[audience];
+    if (!cfg) return;
+
+    // Build link HTML
+    let linksHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        linksHTML += `<div class="nav-dropdown">
+          <span class="nav-link nav-dropdown-trigger">${link.label}</span>
+          <div class="nav-dropdown-menu">
+            ${link.dropdown.map(d => `<a class="nav-dropdown-item" href="${d.href}">${d.label}</a>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        linksHTML += `<a class="nav-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    // Mobile links
+    let mobileHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        link.dropdown.forEach(d => {
+          mobileHTML += `<a class="mobile-link" href="${d.href}">${d.label}</a>`;
+        });
+      } else {
+        mobileHTML += `<a class="mobile-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    const payHTML = cfg.pay
+      ? `<a class="nav-pay" href="${cfg.pay.href}">${cfg.pay.label}</a>`
+      : '';
+
+    const html = `
+      <div class="nav-inner">
+        ${cfg.logo}
+        <div class="nav-links-row">${linksHTML}</div>
+        <div class="nav-actions">
+          <a class="nav-switch" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+          ${payHTML}
+          <a class="nav-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+        </div>
+        <div class="nav-hamburger" id="nav-ham">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        ${mobileHTML}
+        <a class="mobile-link" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+        <a class="mobile-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+      </div>`;
+
+    const nav = document.getElementById('vrsty-nav');
+    nav.className = `theme-${cfg.theme}`;
+    nav.innerHTML = html;
+
+    // Dropdown toggles
+    nav.querySelectorAll('.nav-dropdown').forEach(dd => {
+      dd.querySelector('.nav-dropdown-trigger').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      nav.querySelectorAll('.nav-dropdown').forEach(dd => dd.classList.remove('open'));
+    });
+
+    // Mobile toggle
+    document.getElementById('nav-ham').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  };
+})();
+</script>
+
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.1);
+  --black: #0D0D0D;
+  --dark: #111;
+  --panel: #181818;
+  --panel2: #1e1e1e;
+  --border: rgba(201,168,76,0.14);
+  --text: #f0ece3;
+  --muted: #8a8070;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
+
+.page-hero {
+  background: var(--dark);
+  padding: 140px 24px 72px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(201,168,76,0.1) 0%, transparent 65%);
+}
+.hero-eyebrow {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.28em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px; position: relative;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.04em; line-height: 0.93;
+  color: var(--text); position: relative;
+}
+.hero-title em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  max-width: 440px; margin: 18px auto 0;
+  font-size: 0.95rem; font-weight: 300; line-height: 1.68;
+  color: var(--muted); position: relative;
+}
+
+.breadcrumb {
+  background: var(--panel); border-bottom: 1px solid var(--border);
+  padding: 14px 48px; font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--muted);
+}
+.breadcrumb a { color: var(--gold); text-decoration: none; }
+
+.page-body {
+  max-width: 1000px; margin: 0 auto;
+  padding: 72px 32px 100px;
+  display: grid; grid-template-columns: 1fr 380px;
+  gap: 60px; align-items: start;
+}
+
+/* FORM */
+.form-wrap {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 3px; overflow: hidden;
+}
+.form-header {
+  background: var(--panel2); border-bottom: 1px solid var(--border); padding: 24px 32px;
+}
+.form-header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem; letter-spacing: 0.1em; color: var(--text); margin-bottom: 4px;
+}
+.form-header-sub { font-size: 0.8rem; font-weight: 300; color: var(--muted); }
+
+form { padding: 32px; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+label {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+label .req { color: var(--gold); margin-left: 2px; }
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  background: var(--panel2); border: 1px solid rgba(201,168,76,0.18);
+  color: var(--text); font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem; font-weight: 400;
+  padding: 11px 14px; border-radius: 2px; outline: none; width: 100%;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+input::placeholder, textarea::placeholder { color: #444; }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+select { cursor: pointer; }
+select option { background: #1e1e1e; color: var(--text); }
+textarea { resize: vertical; min-height: 130px; line-height: 1.55; }
+
+.submit-btn {
+  width: 100%; background: var(--gold); color: var(--black);
+  border: none; padding: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; letter-spacing: 0.14em;
+  cursor: pointer; border-radius: 2px; transition: background 0.18s;
+  margin-top: 8px;
+}
+.submit-btn:hover { background: var(--gold-light); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.form-status {
+  display: none; padding: 14px 18px; border-radius: 2px;
+  font-size: 0.88rem; margin-top: 14px; line-height: 1.5;
+}
+.form-status.success {
+  display: block;
+  background: rgba(58,158,98,0.12); border: 1px solid rgba(58,158,98,0.3); color: #4caf72;
+}
+.form-status.error {
+  display: block;
+  background: rgba(224,90,74,0.1); border: 1px solid rgba(224,90,74,0.25); color: #e05a4a;
+}
+
+/* SIDEBAR */
+.sidebar-card {
+  background: var(--panel); border: 1px solid var(--border);
+  padding: 32px; border-radius: 3px; margin-bottom: 20px;
+}
+.sidebar-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+}
+.sidebar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 0.08em; color: var(--text); margin-bottom: 16px;
+}
+
+/* Direct email link */
+.email-link {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--panel2); border: 1px solid var(--border);
+  padding: 14px 16px; border-radius: 2px; margin-bottom: 12px;
+  text-decoration: none; transition: border-color 0.18s;
+}
+.email-link:hover { border-color: var(--gold); }
+.email-icon { font-size: 1.1rem; flex-shrink: 0; }
+.email-text { font-size: 0.85rem; font-weight: 400; color: var(--gold); }
+.email-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+/* Socials */
+.social-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-top: 4px;
+}
+.social-link {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--panel2); border: 1px solid var(--border);
+  padding: 11px 14px; border-radius: 2px;
+  text-decoration: none; transition: all 0.18s;
+}
+.social-link:hover { border-color: var(--gold); }
+.social-icon { font-size: 1rem; flex-shrink: 0; }
+.social-name {
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--muted);
+  transition: color 0.18s;
+}
+.social-link:hover .social-name { color: var(--gold); }
+
+/* Response time note */
+.response-note {
+  background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2);
+  padding: 16px 18px; border-radius: 2px; margin-top: 16px;
+  font-size: 0.8rem; font-weight: 300; line-height: 1.6; color: var(--muted);
+}
+.response-note strong { color: var(--gold); font-weight: 500; }
+
+footer {
+  background: var(--dark); border-top: 1px solid var(--border);
+  padding: 32px 48px 24px; text-align: center;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+  letter-spacing: 0.18em; color: var(--gold); margin-bottom: 6px;
+}
+.footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.footer-links a { font-size: 0.73rem; color: #555; text-decoration: none; transition: color 0.18s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-copy { font-size: 0.67rem; color: #333; }
+.social-svg {
+  width: 18px; height: 18px; flex-shrink: 0;
+  color: var(--muted); transition: color 0.18s;
+}
+.social-link:hover .social-svg { color: var(--gold); }
+
+@media (max-width: 860px) {
+  .page-body { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+}
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .breadcrumb, footer { padding-left: 20px; padding-right: 20px; }
+  .page-body { padding: 40px 16px 80px; }
+  form { padding: 24px 20px; }
+  .form-header { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="vrsty-nav"></nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">Get in Touch</div>
+  <h1 class="hero-title">Contact <em>Us</em></h1>
+  <p class="hero-sub">Questions about a job, the program, or anything else — we're here and we respond fast.</p>
+</div>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> &nbsp;/&nbsp; Contact
+</div>
+
+<div class="page-body">
+
+  <!-- CONTACT FORM -->
+  <div>
+    <div class="form-wrap">
+      <div class="form-header">
+        <div class="form-header-title">Send Us a Message</div>
+        <div class="form-header-sub">We'll get back to you within one business day.</div>
+      </div>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" name="firstName" placeholder="First name" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" name="lastName" placeholder="Last name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>I am a… <span class="req">*</span></label>
+          <select name="type" required>
+            <option value="" disabled selected>Select one</option>
+            <option value="homeowner">Homeowner interested in a quote</option>
+            <option value="student">Student interested in the BM program</option>
+            <option value="painter">Interested in painting on a crew</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message <span class="req">*</span></label>
+          <textarea name="message" placeholder="What's on your mind? The more detail the better." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="contactBtn">Send Message</button>
+        <div class="form-status" id="contactStatus"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-label">Direct Contact</div>
+      <div class="sidebar-title">Reach Us Directly</div>
+      <a class="email-link" href="mailto:vrsty2025@gmail.com">
+        <span class="email-icon">✉️</span>
+        <div>
+          <div class="email-text">vrsty2025@gmail.com</div>
+          <div class="email-sub">General inquiries & questions</div>
+        </div>
+      </a>
+      <div class="response-note">
+        <strong>Response time:</strong> We respond to all messages within one business day. For urgent job-related questions, email is the fastest way to reach us.
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-label">Follow Along</div>
+      <div class="sidebar-title">Find Us Online</div>
+      <div class="social-grid">
+        <a class="social-link" href="https://instagram.com/vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          <span class="social-name">Instagram</span>
+        </a>
+        <a class="social-link" href="https://x.com/vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span class="social-name">X / Twitter</span>
+        </a>
+        <a class="social-link" href="https://facebook.com/vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          <span class="social-name">Facebook</span>
+        </a>
+        <a class="social-link" href="https://snapchat.com/add/vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12.166 2C9.318 2 7.2 3.338 6.086 5.525c-.428.825-.386 2.178-.358 3.078l.004.18c-.214.043-.45.064-.7.064-.386 0-.743-.07-.98-.13l-.064-.016c-.107-.026-.197-.04-.28-.04-.364 0-.6.213-.65.573-.05.352.108.71.458.878.062.03.79.318 1.702.47-.13.306-.332.58-.6.734-.15.088-.227.244-.19.4.074.319.574.55 1.4.665.218.03.266.062.317.128.108.14.093.43.06.69-.024.196.13.36.328.36.108 0 .226-.046.362-.142.418-.29.967-.456 1.53-.456.488 0 .922.12 1.29.357.544.349 1.115.527 1.697.527.584 0 1.154-.178 1.698-.527.368-.237.802-.357 1.29-.357.565 0 1.114.166 1.532.456.136.096.254.142.362.142.198 0 .352-.164.328-.36-.033-.26-.048-.55.06-.69.05-.066.1-.098.317-.128.826-.115 1.326-.346 1.4-.665.037-.156-.04-.312-.19-.4-.268-.154-.47-.428-.6-.734.912-.152 1.64-.44 1.702-.47.35-.167.508-.526.458-.878-.05-.36-.286-.573-.65-.573-.083 0-.173.014-.28.04l-.064.016c-.237.06-.594.13-.98.13-.25 0-.486-.021-.7-.064l.004-.18c.028-.9.07-2.253-.358-3.078C16.8 3.338 14.682 2 11.834 2h.332z"/></svg>
+          <span class="social-name">Snapchat</span>
+        </a>
+        <a class="social-link" href="https://tiktok.com/@vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          <span class="social-name">TikTok</span>
+        </a>
+        <a class="social-link" href="https://youtube.com/@vrsty" target="_blank">
+          <svg class="social-svg" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span class="social-name">YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-card" style="text-align:center;">
+      <div class="sidebar-label">Quick Links</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+        <a href="students-apply.html" style="color:var(--gold);text-decoration:none;font-size:0.85rem;font-weight:500;">Apply as Branch Manager →</a>
+        <a href="homeowners-how-it-works.html" style="color:var(--muted);text-decoration:none;font-size:0.85rem;">Get a free estimate →</a>
+        <a href="painters-apply.html" style="color:var(--muted);text-decoration:none;font-size:0.85rem;">Apply as a Painter →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">VRSTY</div>
+  <div class="footer-links">
+    <a href="homeowners-how-it-works.html">Homeowners</a>
+    <a href="students-how-it-works.html">Students</a>
+    <a href="students-apply.html">Apply</a>
+    <a href="painters-apply.html">Painters</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 Vrsty, Inc. All rights reserved.</div>
+</footer>
+
+<script>
+initNav('student');
+
+// Contact form → mailto fallback since no backend yet
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('contactBtn');
+  const status = document.getElementById('contactStatus');
+  const data = new FormData(this);
+
+  const name = data.get('firstName') + ' ' + data.get('lastName');
+  const email = data.get('email');
+  const type = data.get('type');
+  const message = data.get('message');
+
+  const subject = encodeURIComponent('VRSTY Contact: ' + type + ' — ' + name);
+  const body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'Type: ' + type + '\n\n' +
+    'Message:\n' + message
+  );
+
+  // Open mailto
+  window.location.href = 'mailto:vrsty2025@gmail.com?subject=' + subject + '&body=' + body;
+
+  status.className = 'form-status success';
+  status.textContent = '✓ Your email client should open now. If it didn\'t, email us directly at vrsty2025@gmail.com';
+  btn.textContent = 'Message Ready to Send';
+});
+</script>
+</body>
+</html>

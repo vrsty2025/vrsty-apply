@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRSTY — Student-Run Painting</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<!-- SHARED NAV STYLES + SCRIPT — paste into every VRSTY page -->
+
+<style id="vrsty-nav-styles">
+/* ── VRSTY SHARED NAV ── */
+#vrsty-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* LIGHT (homeowner) theme */
+#vrsty-nav.theme-light {
+  background: rgba(255,252,245,0.96);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-light .nav-logo { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-logo span { color: #C9A84C; }
+#vrsty-nav.theme-light .nav-link { color: #555; }
+#vrsty-nav.theme-light .nav-link:hover { color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-dropdown-menu {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+#vrsty-nav.theme-light .nav-dropdown-item { color: #444; }
+#vrsty-nav.theme-light .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-pay { color: #C9A84C; border: 1px solid rgba(201,168,76,0.4); }
+#vrsty-nav.theme-light .nav-pay:hover { background: rgba(201,168,76,0.08); }
+#vrsty-nav.theme-light .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-light .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-light .nav-switch { color: #aaa; }
+#vrsty-nav.theme-light .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-light .mobile-menu { background: #fffcf5; border-top: 1px solid rgba(201,168,76,0.15); }
+#vrsty-nav.theme-light .mobile-link { color: #333; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+/* DARK (student) theme */
+#vrsty-nav.theme-dark {
+  background: rgba(13,13,13,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  backdrop-filter: blur(12px);
+}
+#vrsty-nav.theme-dark .nav-logo { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-logo span { color: #f0ece3; }
+#vrsty-nav.theme-dark .nav-link { color: #888; }
+#vrsty-nav.theme-dark .nav-link:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-dropdown-menu {
+  background: #1a1a1a;
+  border: 1px solid rgba(201,168,76,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#vrsty-nav.theme-dark .nav-dropdown-item { color: #bbb; }
+#vrsty-nav.theme-dark .nav-dropdown-item:hover { background: rgba(201,168,76,0.08); color: #C9A84C; }
+#vrsty-nav.theme-dark .nav-pay { display: none; }
+#vrsty-nav.theme-dark .nav-cta { background: #C9A84C; color: #0D0D0D; }
+#vrsty-nav.theme-dark .nav-cta:hover { background: #e2c96a; }
+#vrsty-nav.theme-dark .nav-switch { color: #555; }
+#vrsty-nav.theme-dark .nav-switch:hover { color: #C9A84C; }
+#vrsty-nav.theme-dark .mobile-menu { background: #111; border-top: 1px solid rgba(201,168,76,0.1); }
+#vrsty-nav.theme-dark .mobile-link { color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+/* Structure */
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+/* Dropdown */
+.nav-dropdown { position: relative; }
+.nav-dropdown-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.nav-dropdown-trigger::after {
+  content: '▾';
+  font-size: 0.6rem;
+  margin-top: 1px;
+}
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: all 0.18s;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.nav-dropdown-item {
+  display: block;
+  padding: 11px 16px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+/* Right actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-switch {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+
+.nav-pay {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  border-radius: 2px;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.nav-cta {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  padding: 9px 22px;
+  border-radius: 2px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+
+/* Mobile hamburger */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+#vrsty-nav.theme-light .nav-hamburger span { background: #333; }
+#vrsty-nav.theme-dark .nav-hamburger span { background: #C9A84C; }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 0 16px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 32px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+}
+.mobile-cta {
+  margin: 12px 32px 0;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #C9A84C;
+  color: #0D0D0D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nav-links-row, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script id="vrsty-nav-script">
+(function() {
+  const NAV_CONFIG = {
+    homeowner: {
+      theme: 'light',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'homeowners-how-it-works.html' },
+        { label: 'Our Process', href: 'homeowners-process.html' },
+        { label: 'Gallery', href: 'homeowners-gallery.html' },
+        { label: 'Testimonials', href: 'homeowners-testimonials.html' },
+        { label: 'More ▾', dropdown: [
+          { label: 'FAQs', href: 'homeowners-faqs.html' },
+          { label: 'Financing', href: 'homeowners-financing.html' },
+          { label: 'Register a Warranty', href: 'homeowners-warranty.html' },
+        ]},
+      ],
+      pay: { label: 'Make a Payment', href: 'homeowners-payment.html' },
+      cta: { label: 'Free Estimate', href: '#estimate' },
+      switchLabel: '🎓 For Students →',
+      switchHref: 'students-how-it-works.html',
+    },
+    student: {
+      theme: 'dark',
+      logo: '<a class="nav-logo" href="index.html">VRSTY</a>',
+      links: [
+        { label: 'How It Works', href: 'students-how-it-works.html' },
+        { label: 'History', href: 'students-history.html' },
+        { label: 'Alumni', href: 'students-alumni.html' },
+        { label: 'Resources', href: 'students-resources.html' },
+        { label: 'Painters ▾', dropdown: [
+          { label: 'How It Works', href: 'painters-how-it-works.html' },
+          { label: 'Apply as a Painter', href: 'painters-apply.html' },
+        ]},
+      ],
+      pay: null,
+      cta: { label: 'Apply Now', href: 'students-apply.html' },
+      switchLabel: '🏠 For Homeowners →',
+      switchHref: 'homeowners-how-it-works.html',
+    }
+  };
+
+  window.initNav = function(audience) {
+    const cfg = NAV_CONFIG[audience];
+    if (!cfg) return;
+
+    // Build link HTML
+    let linksHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        linksHTML += `<div class="nav-dropdown">
+          <span class="nav-link nav-dropdown-trigger">${link.label}</span>
+          <div class="nav-dropdown-menu">
+            ${link.dropdown.map(d => `<a class="nav-dropdown-item" href="${d.href}">${d.label}</a>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        linksHTML += `<a class="nav-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    // Mobile links
+    let mobileHTML = '';
+    cfg.links.forEach(link => {
+      if (link.dropdown) {
+        link.dropdown.forEach(d => {
+          mobileHTML += `<a class="mobile-link" href="${d.href}">${d.label}</a>`;
+        });
+      } else {
+        mobileHTML += `<a class="mobile-link" href="${link.href}">${link.label}</a>`;
+      }
+    });
+
+    const payHTML = cfg.pay
+      ? `<a class="nav-pay" href="${cfg.pay.href}">${cfg.pay.label}</a>`
+      : '';
+
+    const html = `
+      <div class="nav-inner">
+        ${cfg.logo}
+        <div class="nav-links-row">${linksHTML}</div>
+        <div class="nav-actions">
+          <a class="nav-switch" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+          ${payHTML}
+          <a class="nav-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+        </div>
+        <div class="nav-hamburger" id="nav-ham">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="mobile-menu" id="mobile-menu">
+        ${mobileHTML}
+        <a class="mobile-link" href="${cfg.switchHref}">${cfg.switchLabel}</a>
+        <a class="mobile-cta" href="${cfg.cta.href}">${cfg.cta.label}</a>
+      </div>`;
+
+    const nav = document.getElementById('vrsty-nav');
+    nav.className = `theme-${cfg.theme}`;
+    nav.innerHTML = html;
+
+    // Dropdown toggles
+    nav.querySelectorAll('.nav-dropdown').forEach(dd => {
+      dd.querySelector('.nav-dropdown-trigger').addEventListener('click', function(e) {
+        e.stopPropagation();
+        dd.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      nav.querySelectorAll('.nav-dropdown').forEach(dd => dd.classList.remove('open'));
+    });
+
+    // Mobile toggle
+    document.getElementById('nav-ham').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('open');
+    });
+  };
+})();
+</script>
+
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.1);
+  --black: #0D0D0D;
+  --dark: #111;
+  --text: #f0ece3;
+  --muted: #9a9080;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--text); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,168,76,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 20% 20%, rgba(201,168,76,0.04) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-logo {
+  width: 150px; height: 150px; object-fit: contain;
+  margin-bottom: 32px; position: relative;
+  animation: logoIn 1s ease both;
+  filter: drop-shadow(0 0 40px rgba(201,168,76,0.22));
+}
+@keyframes logoIn {
+  from { opacity:0; transform: translateY(-16px) scale(0.92); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+.hero-eyebrow {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.26em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.hero-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.8rem, 10vw, 8rem);
+  line-height: 0.93; letter-spacing: 0.04em; color: var(--text);
+  animation: fadeUp 0.8s 0.35s ease both;
+}
+.hero-headline em { color: var(--gold); font-style: normal; }
+.hero-sub {
+  max-width: 500px; margin: 22px auto 0;
+  font-size: 1rem; font-weight: 300; line-height: 1.68; color: var(--muted);
+  animation: fadeUp 0.8s 0.5s ease both;
+}
+.hero-divider {
+  width: 56px; height: 2px; background: var(--gold);
+  margin: 36px auto; animation: fadeUp 0.8s 0.6s ease both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(22px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* DUAL PATH CARDS */
+.dual-path {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; max-width: 860px; margin: 0 auto;
+  animation: fadeUp 0.8s 0.7s ease both;
+}
+.path-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.18);
+  padding: 48px 40px; text-align: center;
+  text-decoration: none; color: var(--text);
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.path-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.25s;
+}
+.path-card:hover::after { opacity: 1; }
+.path-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.path-icon { font-size: 2.2rem; margin-bottom: 14px; display: block; }
+.path-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+}
+.path-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem; letter-spacing: 0.08em; margin-bottom: 12px;
+}
+.path-desc {
+  font-size: 0.86rem; font-weight: 300; line-height: 1.62;
+  color: var(--muted); margin-bottom: 26px;
+}
+.path-btn {
+  display: inline-block; padding: 11px 28px;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  text-decoration: none; border-radius: 2px; transition: all 0.2s;
+}
+.path-btn-gold { background: var(--gold); color: var(--black); }
+.path-btn-gold:hover { background: var(--gold-light); }
+.path-btn-outline { border: 1px solid var(--gold); color: var(--gold); }
+.path-btn-outline:hover { background: var(--gold); color: var(--black); }
+
+/* BOTTOM STRIP */
+.bottom-strip {
+  background: rgba(201,168,76,0.06);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  text-align: center;
+  padding: 28px 24px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+.bottom-strip strong { color: var(--gold); font-weight: 600; }
+
+/* Footer */
+footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 36px 48px 28px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 0.18em; color: var(--gold);
+  margin-bottom: 8px;
+}
+.footer-sub { font-size: 0.72rem; color: var(--muted); margin-bottom: 20px; }
+.footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+.footer-links a {
+  font-size: 0.75rem; color: var(--muted);
+  text-decoration: none; transition: color 0.18s;
+}
+.footer-links a:hover { color: var(--gold); }
+.footer-copy {
+  margin-top: 24px; font-size: 0.68rem; color: #444;
+}
+
+@media (max-width: 640px) {
+  .dual-path { grid-template-columns: 1fr; }
+  .path-card { padding: 36px 28px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="vrsty-nav"></nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <img class="hero-logo" src="VRSTY_Logo.png" alt="VRSTY" onerror="this.style.display='none'">
+  <div class="hero-eyebrow">Premium Residential Painting · Student-Led</div>
+  <h1 class="hero-headline">Built<br><em>Different.</em></h1>
+  <p class="hero-sub">VRSTY is a collegiate painting company delivering premium results for homeowners — and building the next generation of entrepreneurs, leaders, and professionals.</p>
+  <div class="hero-divider"></div>
+  <div class="dual-path">
+    <a class="path-card" href="homeowners-how-it-works.html">
+      <span class="path-icon">🏠</span>
+      <div class="path-label">Homeowners</div>
+      <div class="path-title">Get Your Home Painted</div>
+      <p class="path-desc">Professional results, guaranteed quality, honest pricing. Get a free estimate today.</p>
+      <span class="path-btn path-btn-gold">Learn More</span>
+    </a>
+    <a class="path-card" href="students-how-it-works.html">
+      <span class="path-icon">🎓</span>
+      <div class="path-label">College Students</div>
+      <div class="path-title">Run Your Own Branch</div>
+      <p class="path-desc">Lead a team, manage a market, and earn serious income — all while you're still in school.</p>
+      <span class="path-btn path-btn-outline">Explore the Opportunity</span>
+    </a>
+  </div>
+</section>
+
+<div class="bottom-strip">
+  <strong>Vrsty, Inc.</strong> &nbsp;·&nbsp; Delaware C-Corp &nbsp;·&nbsp; Fully Insured &nbsp;·&nbsp; Student-Led, Professionally Backed
+</div>
+
+<footer>
+  <div class="footer-logo">VRSTY</div>
+  <div class="footer-sub">Premium residential painting, student-led and professionally backed.</div>
+  <div class="footer-links">
+    <a href="homeowners-how-it-works.html">Homeowners</a>
+    <a href="students-how-it-works.html">Students</a>
+    <a href="painters-apply.html">Painters</a>
+    <a href="homeowners-payment.html">Make a Payment</a>
+    <a href="students-apply.html">Apply Now</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div style="display:flex;justify-content:center;gap:20px;margin:18px 0 8px;flex-wrap:wrap;">
+    <a href="https://instagram.com/vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">Instagram</a>
+    <a href="https://x.com/vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">X</a>
+    <a href="https://facebook.com/vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">Facebook</a>
+    <a href="https://snapchat.com/add/vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">Snapchat</a>
+    <a href="https://tiktok.com/@vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">TikTok</a>
+    <a href="https://youtube.com/@vrsty" target="_blank" style="color:#666;font-size:0.72rem;letter-spacing:0.08em;text-decoration:none;text-transform:uppercase;font-weight:500;transition:color 0.18s;" onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#666'">YouTube</a>
+  </div>
+  <div class="footer-copy">© 2025 Vrsty, Inc. All rights reserved.</div>
+</footer>
+
+<script>
+  // Homepage uses neutral dark nav
+  document.getElementById('vrsty-nav').className = 'theme-dark';
+  document.getElementById('vrsty-nav').innerHTML = `
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.18em;text-decoration:none;">VRSTY</a>
+      <div style="flex:1"></div>
+      <div class="nav-actions" style="display:flex;align-items:center;gap:12px;">
+        <a href="homeowners-how-it-works.html" style="font-family:'Barlow',sans-serif;font-size:0.76rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:#888;padding:6px 12px;">Homeowners</a>
+        <a href="students-how-it-works.html" style="font-family:'Barlow',sans-serif;font-size:0.76rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:#888;padding:6px 12px;">Students</a>
+        <a href="contact.html" style="font-family:'Barlow',sans-serif;font-size:0.76rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:#888;padding:6px 12px;">Contact</a>
+        <a href="students-apply.html" style="background:#C9A84C;color:#0D0D0D;font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.1em;text-decoration:none;padding:9px 22px;border-radius:2px;">Apply Now</a>
+      </div>
+    </div>
+  `;
+</script>
+</body>
+</html>
